@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>密码重置</title>
+    <link th:href="@{/css/signin.css}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script th:href="@{/js/jquery-3.2.1.min.js}"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script th:href="@{/js/bootstrap.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<script>
+    $(function(){
+        var flag=1;
+        $("#a4").blur(function(){
+            var pwd1 = $("#a3").val();
+            var pwd2 = $("#a4").val();
+            if(pwd1!=pwd2){
+                $("#a5").html("两次输入的密码不一样!!!");
+                flag=1;
+            }else{
+                $("#a5").html("");
+                flag=0;
+            }
+            });
+    })
+
+</script>
+<body>
+<h1 align="center">注册</h1>
+
+<div class="container">
+
+    <form class="form-signin" id="data" method="post" th:action="@{/regist}">
+        <div class="form-group has-success has-feedback">
+            <span align="center" th:text="${exit}" style="color: red;"></span>
+            <input type="text" class="form-control" placeholder="账号" id="a1" name="username">
+            <span style="color: #ffffff"> </span>
+            <span id="a6" style="color: #761c19"></span>
+        </div>
+        <hr>
+        <input type="password" class="form-control" placeholder="密码" id="a3" name="password">
+        <input type="password" class="form-control" placeholder="确认密码" id="a4">
+        <span id="a5" style="color: #761c19"></span>
+        <div style="text-align:center">
+            <button type="submit" class="btn btn-primary btn-lg btn-block" style="color: #f0ad4e;float: contour" id="submit">提交</button>
+        </div>
+    </form>
+
+</div> <!-- /container -->
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-editable.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dataTables.bootstrap.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/hadoop.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/iconfont.css}" />
+    <title>Browsing HDFS</title>
+      <style>
+          .tc{width: 500px;height: 200px;background: red;position: absolute;top:50%;left: 50%;margin-left: -250px;margin-top: -100px;z-index: 10;display: none;}
+          .tc1{width: 500px;height: 200px;background: red;position: absolute;top:50%;left: 50%;margin-left: -250px;margin-top: -100px;z-index: 10;display: none;}
+          .iconfont{font-size: 20px;}
+      </style>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+
+    <header class="navbar navbar-inverse bs-docs-nav" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+          <div class="navbar-brand" id="info_name"></div>
+          <div style="float:right;" class="navbar-brand">
+              <a style="color: red;" th:href="@{/logout}">注销</a>
+          </div>
+      </div>
+    </div>
+    </header>
+    <div class="modal" id="file-info" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+	    <h4 class="modal-title" id="file-info-title">File information</h4>
+	  </div>
+	  <div class="modal-body" id="file-info-body">
+	    <div class=row>
+              <span class="col-xs-4">
+                <a id="file-info-download">Download</a>
+              </span>
+              <span class="col-xs-4">
+                <a id="file-info-preview-head" style="cursor:pointer">Head the file (first 32K)</a>
+              </span>
+              <span class="col-xs-4">
+                <a id="file-info-preview-tail" style="cursor:pointer">Tail the file (last 32K)</a>
+	      </span>
+	    </div>
+	    <hr />
+	    <div class="panel panel-success" id="file-info-blockinfo-panel">
+	      <div class="panel-heading">
+		Block information -- 
+		<select class="btn btn-default" id="file-info-blockinfo-list">
+		</select>
+	      </div>
+	      <div class="panel-body" id="file-info-blockinfo-body"></div>
+	    </div>
+	    <div class="panel panel-info" id="file-info-tail" style="display:none">
+	      <div class="panel-heading">File contents</div>
+	      <div class="panel-body">
+		<div class="input-group-sm">
+		<textarea class="form-control" style="height: 150px" id="file-info-preview-body"></textarea>
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="page-header">
+	<h1>Browse Directory</h1>
+      </div>
+      <div class="alert alert-danger" id="alert-panel" style="display:none">
+	<button type="button" class="close" onclick="$('#alert-panel').hide();">&times;</button>
+	<div class="alert-body" id="alert-panel-body"></div>
+      </div>
+        <div class="tc">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Create Directory</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="new_directory_pwd">/</span>
+                            <input type="text" class="form-control" id="new_directory" placeholder="New Directory Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btn-create-directory-send" data-complete-text="Creating...">
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="tc1">
+        <div class="modal-content">
+            <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="file-upload-title">Upload File</h4>
+            </div>
+            <form method="post" th:action="@{/upload/?path=}+${path}" enctype="multipart/form-data">
+                <div class="modal-body" id="file-upload-body">
+                    <input id="modal-upload-file-input" type="file" class="file" name="file" multiple="">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="modal-upload-file-button" data-complete-text="Uploading...">Upload</button>
+                </div>
+            </form>
+        </div>
+        </div>
+        <span th:text="${info_exists}" style="color: red;"></span>
+        <div class="row">
+            <div class="col-xs-10 col-md-10">
+                <form onsubmit="return false;">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="directory" th:value="${path}">
+                        <div id="info" th:name="${path}"></div>
+                        <span class="input-group-btn">
+              <button class="btn btn-default" type="button" id="btn-nav-directory" onclick="f()">Go!</button>
+
+            </span>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-2 col-md-2">
+                <button type="button" class="btn btn-default icon-wenjianjia iconfont" data-toggle="modal" aria-label="New Directory" data-target="#btn-create-directory" title="Create Directory" onclick="ff()">
+                </button>
+                <button type="button" class="btn btn-default iconfont icon-shangchuan" data-toggle="modal" data-target="#modal-upload-file" title="Upload Files" onclick="fff()">
+                </button>
+            </div>
+        </div>
+      <br />
+      <div id="panel"></div>
+
+      <div th:insert="~{commons/commons::table_show}"></div>
+
+        <script>
+            function f(){
+              location.href="/click/?path=" + document.getElementById("directory").value;
+            }
+            function ff(){
+                $('.tc').fadeIn();
+            }
+
+            function fff(){
+                $('.tc1').fadeIn();
+            }
+
+            $('.close').click(function (){
+                $('.tc').fadeOut();
+                $('.tc1').fadeOut();
+            })
+
+            $('#btn-create-directory-send').click(function (){
+                var path = $("#info").attr('name');
+                if(path=='/')
+                    location.href="/create/?path=" + path +document.getElementById("new_directory").value;
+                else
+                    location.href="/create/?path=" + path + '/' +document.getElementById("new_directory").value;
+            })
+
+            window.onload = function () {
+                var a = document.getElementsByTagName("a");
+                for(var i = 0, len = a.length; i < len; i++){
+                    a[i].href = encodeURI(a[i].href);
+                }
+                document.getElementById('info_name').innerText=document.cookie.substr(7)+" 的云盘";
+            }
+
+
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>视频播放</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script th:href="@{/js/jquery-3.2.1.min.js}"></script>
+    <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+    <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
+    <script src="https://unpkg.com/flv.js/dist/flv.min.js"></script>
+    <script src="https://unpkg.com/videojs-flvjs/dist/videojs-flvjs.min.js"></script>
+</head>
+<body>
+
+
+
+<video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" poster="http://vjs.zencdn.net/v/oceans.png" data-setup="{}">
+    <source th:src="@{/look/?path=}+${path}" th:type="@{video/}+${type}">
+    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+</video>
+
+</body>
+<script>
+
+    var myVideo1 = videojs('example_video_1', {
+        bigPlayButton: true,
+        textTrackDisplay: false,
+        posterImage: false,
+        errorDisplay: false,
+        playbackRates: [-2,-1.5,-1,0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6.5,7,7.5,8,8.5,9],
+    })
+    var yy = document.querySelector('#example_video_1')
+    yy.style.width=(window.innerWidth-30)+'px';
+    yy.style.height=(window.innerHeight-30)+'px';
+    // yy.setAttribute("height", 300);
+    window.onresize=function(){
+        yy.style.width=(window.innerWidth-30)+'px';
+        yy.style.height=(window.innerHeight-30)+'px';
+    }
+
+    myVideo1.play()
+</script>
+</html>

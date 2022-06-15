@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<link rel="stylesheet" type="text/css" th:href="@{/css/iconfont.css}" />
+<div class="row" th:fragment="table_show">
+    <div class="col-sm-12">
+        <table class="table dataTable no-footer" id="table-explorer" role="grid" aria-describedby="table-explorer_info">
+            <thead><tr role="row"><th class="sorting_asc" rowspan="1" colspan="1" aria-label="" style="width: 16px;">Size</th>
+                <!--<input type="checkbox" id="file-selector-all"></th>-->
+
+                <th class="sorting" tabindex="0" aria-controls="table-explorer" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 47px;">Name</th>
+                <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="" style="width: 3px;"></th>
+            </tr></thead>
+            <tbody>
+            <tr inode-path="hbase" data-permission="755" class="explorer-entry" role="row" th:each="data:${get_datas}">
+                <td th:text="${data.getBlockSize()}"></td><td><a inode-type="DIRECTORY" class="explorer-browse-links" th:text="${data.getFiles2()}" th:href="@{/click/?path=}+${bring_path+data.getFiles2()}"></a></td>
+                <td><a class="glyphicon glyphicon-trash icon-lajitongshanchu iconfont" th:href="@{/delete/?path=}+${bring_path+data.getFiles2()}"></a></td>
+                <td th:width="10px"><a th:class="${not data.isIsfile()?'glyphicon glyphicon-trash':''}+@{' icon-xiazai iconfont'}" th:href="@{/download/?path=}+${data.isIsfile()?bring_path+data.getFiles2():''}"></a></td>
+            </tr>
+
+            </tbody>
+        </table></div>
+</div>
+
+</body>
+</html>

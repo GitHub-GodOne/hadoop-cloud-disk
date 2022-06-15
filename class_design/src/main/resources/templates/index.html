@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Login</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/signin.css}" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script th:href="@{/js/ie8-responsive-file-warning.js}"></script><![endif]-->
+    <script th:href="@{/js/ie-emulation-modes-warning.js}"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script th:href="@{/js/jquery-3.2.1.min.js}"></script>
+  </head>
+<!--<script>-->
+<!--  $(function(){-->
+<!--    $("#submit").click(function(){-->
+<!--      var inputname = $("#inputusername").val();-->
+<!--      var inputpwd = $("#inputPassword").val();-->
+<!--      var flag=false;-->
+<!--      if($("#ck").is(':checked'))-->
+<!--        flag=true;-->
+<!--      $.post("/loginServlet",{"username":inputname,"userpwd":inputpwd,"flag":flag},function (data) {-->
+<!--        if(data=="登录失败,用户名或密码错误!!!"){-->
+<!--          alert(data);-->
+<!--          return false;-->
+<!--        }-->
+<!--        window.location=data;-->
+<!--      });-->
+<!--    })-->
+<!--    $.get("/sessionServlet",function (data) {-->
+<!--      if(data!="false"){-->
+<!--        $("#inputusername").attr("value",data.username);-->
+<!--        $("#inputPassword").attr("value",data.userpwd);-->
+<!--      }-->
+<!--    })-->
+<!--  })-->
+
+<!--</script>-->
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin" th:action="@{/login}" method="post">
+        <span th:text="${msg}" th:if="${not #strings.isEmpty(msg)}" style="color: red"></span>
+        <h2 class="form-signin-heading">登录系统</h2>
+        <label for="username" class="sr-only">账号</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="请输入学号..." required autofocus>
+        <div><span> </span></div>
+        <label for="password" class="sr-only">密码</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码..." required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" checked="true" id="ck" name="rememberMe"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary" type="submit">登录</button>
+        <a href="reset.html" class="btn btn-lg btn-default" style="background-color:#d9534f;float: right">注册</a>
+        
+      </form>
+
+    </div> <!-- /container -->
+
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script th:href="@{/js/ie10-viewport-bug-workaround.js}"></script>
+  </body>
+</html>
